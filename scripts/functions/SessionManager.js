@@ -1,7 +1,9 @@
-const beforeLoginFunctions = []
-const prefix = 'LwdOne:'
-const validations = { supabaseApiKey: validateSupabaseConnection }
-global.LwdOneSession = new Session(['supabaseApiUrl', 'supabaseApiKey'], { beforeLoginFunctions, prefix, validations })
+function createSession() {
+  const beforeLoginFunctions = []
+  const prefix = 'LwdOne:'
+  const validations = { supabaseApiKey: validateSupabaseConnection }
+  return new Session(['supabaseApiUrl', 'supabaseApiKey'], { beforeLoginFunctions, prefix, validations })
+}
 
 async function login() {
   const supabaseApiUrl = document.querySelector("[name=supabaseApiUrl]").value
