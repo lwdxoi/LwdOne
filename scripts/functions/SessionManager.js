@@ -1,7 +1,11 @@
 function createSession() {
   const beforeLoginFunctions = []
   const prefix = 'LwdOne:'
-  const validations = { supabaseApiKey: validateSupabaseConnection }
+  const validations = {
+    supabaseApiUrl: Session.defaultRequiredValidation,
+    supabaseApiKey: Session.defaultRequiredValidation,
+    supabaseConnection: validateSupabaseConnection
+  }
   return new Session(['supabaseApiUrl', 'supabaseApiKey'], { beforeLoginFunctions, prefix, validations })
 }
 
@@ -27,8 +31,17 @@ async function logout() {
 
 async function validateSupabaseConnection(_, { supabaseApiUrl, supabaseApiKey }) {
   // this = LwdOneSession, as this function is called inside Session.isValid
-  this.SupabaseApi = new SupabaseApi(supabaseApiUrl, supabaseApiKey)
-  global.supa = global.LwdOneSession.SupabaseApi
-  return await this.SupabaseApi.read('images').then((images) => images.length > 0)
+  try {
+    const SupabaseApi = new SupabaseApi(supabaseApiUrl, supabaseApiKey)
+    isReturning = await this.SupabaseApi.read('images').then((images) => images.length > 0)
+    if (isReturning) {
+      this.SupabaseApi = SupabaseApi
+      global.supa = global.LwdOneSession.SupabaseApi
+      return true;
+    }
+  } catch {
+    console.warn('Failed to connect to Supabase')
+    return false
+  }
 }
 

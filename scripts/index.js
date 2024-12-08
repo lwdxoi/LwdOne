@@ -3,7 +3,7 @@ global.onload = onLoad()
 async function onLoad() {
   global.LwdOneSession = createSession()
 
-  if (!(await global.LwdOneSession.isValid())) return false;
+  if (!(await global.LwdOneSession.login())) return false;
 
   renderLwdOne()
 }
