@@ -32,11 +32,12 @@ async function logout() {
 async function validateSupabaseConnection(_, { supabaseApiUrl, supabaseApiKey }) {
   // this = LwdOneSession, as this function is called inside Session.isValid
   try {
-    const SupabaseApi = new SupabaseApi(supabaseApiUrl, supabaseApiKey)
-    isReturning = await SupabaseApi.read('images').then((images) => images.length > 0)
+    const LwdOneSupabaseApi = new SupabaseApi(supabaseApiUrl, supabaseApiKey)
+    isReturning = await LwdOneSupabaseApi.read('images').then((images) => images.length > 0)
     if (isReturning) {
-      this.SupabaseApi = SupabaseApi
-      global.supa = global.LwdOneSession.SupabaseApi
+      console.log(this)
+      this.SupabaseApi = LwdOneSupabaseApi
+      global.supa = LwdOneSupabaseApi
       return true;
     }
   } catch {
