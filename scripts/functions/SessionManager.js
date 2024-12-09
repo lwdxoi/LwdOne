@@ -7,6 +7,7 @@ function createSession() {
     supabaseConnection: validateSupabaseConnection
   }
   return new Session(['supabaseApiUrl', 'supabaseApiKey'], { beforeLoginFunctions, prefix, validations })
+  // global.LwdOneSession
 }
 
 async function login() {
@@ -30,13 +31,11 @@ async function logout() {
 // }
 
 async function validateSupabaseConnection(_, { supabaseApiUrl, supabaseApiKey }) {
-  // this = LwdOneSession, as this function is called inside Session.isValid
   try {
     const LwdOneSupabaseApi = new SupabaseApi(supabaseApiUrl, supabaseApiKey)
     isReturning = await LwdOneSupabaseApi.read('images').then((images) => images.length > 0)
     if (isReturning) {
-      console.log(this)
-      this.SupabaseApi = LwdOneSupabaseApi
+      global.LwdOneSession.SupabaseApi = LwdOneSupabaseApi
       global.supa = LwdOneSupabaseApi
       return true;
     }
